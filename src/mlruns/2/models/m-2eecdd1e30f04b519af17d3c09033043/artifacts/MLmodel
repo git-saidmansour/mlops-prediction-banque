@@ -1,0 +1,23 @@
+artifact_path: "file:C:/Users/phili/OneDrive/Bureau/DU_DATA_ANALYST/Mod\xE9lisation_CICD/ML_OPS/mlops-prediction-banque/src/mlruns/2/models/m-2eecdd1e30f04b519af17d3c09033043/artifacts"
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.14.4
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.11.1
+model_id: m-2eecdd1e30f04b519af17d3c09033043
+model_size_bytes: 5256
+model_uuid: m-2eecdd1e30f04b519af17d3c09033043
+prompts: null
+run_id: 78e293239ef047a996be9fa7e8aeb2c1
+utc_time_created: '2026-04-08 11:48:51.666775'
