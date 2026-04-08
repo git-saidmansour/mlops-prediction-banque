@@ -1,0 +1,43 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python test / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# MLflow tracking and artifacts
+mlruns/
+mlruns_artifacts/
+
+# Generated data and models
+data/processed/
+app/preprocessor.pkl
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
