@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bankia · Évaluation du Risque de Crédit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:      #0b1628;
+      --navy-mid:  #112240;
+      --navy-soft: #1a3158;
+      --accent:    #2f80ed;
+      --accent-glow: rgba(47,128,237,0.18);
+      --text:      #f0f4fb;
+      --text-muted:#9ab0cc;
+      --border:    rgba(255,255,255,0.09);
+      --card-bg:   rgba(17,34,64,0.85);
+      --green:     #27ae60;
+      --orange:    #e67e22;
+      --red:       #e74c3c;
+      --radius:    12px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background-image:
+        linear-gradient(rgba(47,128,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,128,237,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    header {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      background: rgba(11,22,40,0.75);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--accent); }
+    .badge {
+      font-size: 0.72rem; font-weight: 500; color: var(--text-muted);
+      border: 1px solid var(--border); padding: 4px 12px;
+      border-radius: 20px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    main {
+      position: relative; z-index: 5;
+      max-width: 1000px; margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    .hero { margin-bottom: 48px; }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem; font-weight: 700;
+      line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 14px;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p {
+      color: var(--text-muted); font-size: 1rem;
+      max-width: 540px; line-height: 1.75;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px; backdrop-filter: blur(16px);
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 28px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 10px; }
+
+    label {
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+
+    .slider-row {
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #fff;
+      box-shadow: 0 0 6px rgba(47,128,237,0.5);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #fff;
+      cursor: pointer;
+    }
+
+    .slider-val {
+      min-width: 80px; text-align: right;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--accent);
+    }
+
+    .slider-bounds {
+      display: flex; justify-content: space-between;
+      font-size: 0.74rem; color: var(--text-muted);
+      margin-top: -4px;
+    }
+
+    .btn-submit {
+      margin-top: 32px; width: 100%; padding: 16px;
+      background: var(--accent); color: #fff;
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 0.98rem; letter-spacing: 0.05em;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #result-panel { margin-top: 32px; display: none; }
+    .result-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 40px;
+      display: flex; align-items: center; gap: 40px;
+      backdrop-filter: blur(16px);
+    }
+    .gauge-wrap { position: relative; width: 150px; height: 150px; flex-shrink: 0; }
+    .gauge-wrap svg { width:100%; height:100%; transform: rotate(-90deg); }
+    .gauge-bg { fill:none; stroke: rgba(255,255,255,0.07); stroke-width:10; }
+    .gauge-fill {
+      fill: none; stroke-width: 10; stroke-linecap: round;
+      stroke-dasharray: 314; stroke-dashoffset: 314;
+      transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1), stroke 0.4s;
+    }
+    .gauge-label {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .gauge-pct {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.1rem; line-height: 1;
+    }
+    .gauge-sub {
+      font-size: 0.68rem; color: var(--text-muted);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-top: 3px;
+    }
+    .result-info { flex: 1; }
+    .result-verdict {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 1.6rem; margin-bottom: 8px;
+    }
+    .result-sub { font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+    .risk-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px; padding: 6px 14px; border-radius: 20px;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em;
+    }
+    .risk-badge::before {
+      content:''; width:7px; height:7px;
+      border-radius:50%; background:currentColor; opacity:0.8;
+    }
+    .risk-green  { background: rgba(39,174,96,0.12);  color: var(--green); }
+    .risk-orange { background: rgba(230,126,34,0.12); color: var(--orange); }
+    .risk-red    { background: rgba(231,76,60,0.12);  color: var(--red); }
+
+    footer {
+      position: relative; z-index:5;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      color: var(--text-muted); font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-team {
+      font-size: 0.73rem; color: var(--text-muted);
+      opacity: 0.65; letter-spacing: 0.03em;
+    }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      header { padding: 16px 20px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; padding: 16px; }
+      main { padding: 32px 16px 60px; }
+      .card { padding: 24px 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .result-card { flex-direction: column; text-align: center; }
+      .hero h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Bank<span>ia</span></div>
+    <span class="badge">Risk Engine · ML Powered</span>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Évaluation du<br><em>Risque de Défaut</em></h1>
+      <p>Ajustez le profil financier du client pour obtenir une estimation instantanée de sa probabilité de défaut de paiement.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Profil client</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Lignes de crédit en cours</label>
+          <div class="slider-row">
+            <input type="range" id="credit_lines_outstanding" min="0" max="10" step="1" value="3" oninput="updateVal('credit_lines_outstanding','credit_lines_val','')">
+            <span class="slider-val" id="credit_lines_val">3</span>
+          </div>
+          <div class="slider-bounds"><span>0</span><span>10</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Montant du prêt en cours</label>
+          <div class="slider-row">
+            <input type="range" id="loan_amt_outstanding" min="0" max="20000" step="100" value="5000" oninput="updateVal('loan_amt_outstanding','loan_amt_val','$')">
+            <span class="slider-val" id="loan_amt_val">5 000 $</span>
+          </div>
+          <div class="slider-bounds"><span>0 $</span><span>20 000 $</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Dette totale en cours</label>
+          <div class="slider-row">
+            <input type="range" id="total_debt_outstanding" min="0" max="50000" step="500" value="12000" oninput="updateVal('total_debt_outstanding','total_debt_val','$')">
+            <span class="slider-val" id="total_debt_val">12 000 $</span>
+          </div>
+          <div class="slider-bounds"><span>0 $</span><span>50 000 $</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Revenu annuel</label>
+          <div class="slider-row">
+            <input type="range" id="income" min="10000" max="200000" step="1000" value="55000" oninput="updateVal('income','income_val','$')">
+            <span class="slider-val" id="income_val">55 000 $</span>
+          </div>
+          <div class="slider-bounds"><span>10 000 $</span><span>200 000 $</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Ancienneté professionnelle</label>
+          <div class="slider-row">
+            <input type="range" id="years_employed" min="0" max="40" step="1" value="4" oninput="updateVal('years_employed','years_val','ans')">
+            <span class="slider-val" id="years_val">4 ans</span>
+          </div>
+          <div class="slider-bounds"><span>0 ans</span><span>40 ans</span></div>
+        </div>
+
+        <div class="form-group">
+          <label>Score FICO</label>
+          <div class="slider-row">
+            <input type="range" id="fico_score" min="300" max="850" step="5" value="650" oninput="updateVal('fico_score','fico_val','')">
+            <span class="slider-val" id="fico_val">650</span>
+          </div>
+          <div class="slider-bounds"><span>300</span><span>850</span></div>
+        </div>
+
+      </div>
+
+      <button class="btn-submit" id="btn-predict" onclick="predict()">
+        Analyser le risque
+      </button>
+    </div>
+
+    <div id="result-panel">
+      <div class="result-card">
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 120 120">
+            <circle class="gauge-bg" cx="60" cy="60" r="50"/>
+            <circle class="gauge-fill" id="gauge-fill" cx="60" cy="60" r="50"/>
+          </svg>
+          <div class="gauge-label">
+            <span class="gauge-pct" id="gauge-pct">—</span>
+            <span class="gauge-sub">Risque</span>
+          </div>
+        </div>
+        <div class="result-info">
+          <div class="result-verdict" id="result-verdict">—</div>
+          <div class="result-sub" id="result-sub">—</div>
+          <div id="risk-badge" class="risk-badge">—</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Bankia MLOps · Modèle Random Forest · Données simulées à des fins académiques</span>
+    <span class="footer-team">Max Guiriec · Said Mansour</span>
+  </footer>
+
+  <script>
+    function formatVal(val, unit) {
+      const n = parseFloat(val);
+      if (unit === '$') return n.toLocaleString('fr-FR') + ' $';
+      if (unit === 'ans') return n + ' ans';
+      return String(n);
+    }
+
+    function updateVal(sliderId, displayId, unit) {
+      const slider = document.getElementById(sliderId);
+      const val = slider.value;
+      document.getElementById(displayId).textContent = formatVal(val, unit);
+      const pct = (val - slider.min) / (slider.max - slider.min) * 100;
+      slider.style.background = `linear-gradient(to right, var(--accent) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    }
+
+    window.addEventListener('load', () => {
+      updateVal('credit_lines_outstanding','credit_lines_val','');
+      updateVal('loan_amt_outstanding','loan_amt_val','$');
+      updateVal('total_debt_outstanding','total_debt_val','$');
+      updateVal('income','income_val','$');
+      updateVal('years_employed','years_val','ans');
+      updateVal('fico_score','fico_val','');
+    });
+
+    async function predict() {
+      const fields = [
+        "credit_lines_outstanding","loan_amt_outstanding",
+        "total_debt_outstanding","income","years_employed","fico_score"
+      ];
+      const btn = document.getElementById("btn-predict");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Analyse en cours…';
+      const payload = {};
+      fields.forEach(f => payload[f] = parseFloat(document.getElementById(f).value));
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        showResult(data);
+      } catch (err) {
+        alert("Erreur : " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "Analyser le risque";
+      }
+    }
+
+    function showResult(data) {
+      const colorMap = { green:"#27ae60", orange:"#e67e22", red:"#e74c3c" };
+      const classMap = { green:"risk-green", orange:"risk-orange", red:"risk-red" };
+      const color = colorMap[data.risk_color] || "#2f80ed";
+
+      const fill = document.getElementById("gauge-fill");
+      fill.style.stroke = color;
+      fill.style.strokeDashoffset = 314 - (data.probability / 100) * 314;
+
+      const pct = document.getElementById("gauge-pct");
+      pct.textContent = data.probability + "%";
+      pct.style.color = color;
+
+      document.getElementById("result-verdict").textContent =
+        data.prediction === 1 ? "Défaut probable" : "Profil solvable";
+      document.getElementById("result-sub").textContent =
+        data.prediction === 1
+          ? `Ce client présente une probabilité de défaut de ${data.probability}%. Une analyse approfondie est recommandée avant toute décision d'octroi.`
+          : `Ce client présente une probabilité de défaut de ${data.probability}%. Son profil financier est jugé acceptable selon le modèle de scoring.`;
+
+      const badge = document.getElementById("risk-badge");
+      badge.textContent = `Risque ${data.risk_level}`;
+      badge.className = `risk-badge ${classMap[data.risk_color]}`;
+
+      const panel = document.getElementById("result-panel");
+      panel.style.display = "block";
+      panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  </script>
+
+</body>
+</html>
