@@ -11,13 +11,13 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import mlflow
 import mlflow.sklearn
 
-DATA_PATH = os.path.join("data", "Loan_Data.csv")
+DATA_PATH = os.path.join("..", "data", "Loan_Data.csv")
 
 # Dictionnaire des modèles
 MODELS = {
-    "Logistic_Regression": LogisticRegression(max_iter=1000),
+    "Logistic_Regression": LogisticRegression(max_iter=150),
     "Decision_Tree": DecisionTreeClassifier(max_depth=5), # Itération 1
-    "Random_Forest": RandomForestClassifier(n_estimators=100),
+    "Random_Forest": RandomForestClassifier(n_estimators=200),
 }
 
 def train_and_track():
