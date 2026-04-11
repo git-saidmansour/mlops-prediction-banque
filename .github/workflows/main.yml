@@ -43,4 +43,5 @@ jobs:
             docker stop my-flask-app || true
             docker rm my-flask-app || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+            docker image prune -f
             docker run -d --name my-flask-app -p 5001:5001 ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
